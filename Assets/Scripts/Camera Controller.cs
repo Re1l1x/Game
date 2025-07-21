@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class CameraController : MonoBehaviour {
-    public float rotationSpeed = 2f;
+    public float rotationSpeed = 20f;
 
     private Quaternion targetRotation;
     private bool isRotating;
@@ -50,6 +50,7 @@ public class CameraController : MonoBehaviour {
 
     private void OnRotateLeft()
     {
+        
         if (!isRotating)
         {
             targetRotation *= Quaternion.Euler(0, 90, 0);
