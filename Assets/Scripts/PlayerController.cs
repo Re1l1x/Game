@@ -1,19 +1,25 @@
 using System;
+using System.Numerics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
     public float MoveSpeed = 10;
-    public float SprintSpeed = 30;
-    private float currMoveSpeed = 0;
+    public float SprintSpeed = 20;
 
     private CharacterController movementController;
     private Camera cam;
 
-    protected Vector3 velocity;
+    private float currMoveSpeed;
+    private Vector3 currFallingSpeed;
+    private Vector3 moveVelocity;
+    private Vector3 moveDampVelocity;
+    public float moveSmoothTime = 0.1f;
     
     private InputSystem inputSystem;
     private InputAction moveAction;
@@ -21,10 +27,12 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable() {
         moveAction.Enable();
+        sprintAction.Enable();
     }
 
     private void OnDisable() {
         moveAction.Disable();
+        sprintAction.Disable();
     }
 
     private void Awake()
@@ -45,24 +53,24 @@ public class PlayerController : MonoBehaviour
     private void Update() {
         // if (Input.GetKeyDown(KeyCode.R))
         //     transform.position = new Vector3(3, 0, 0); // Hit "R" to spawn in this position
-        Vector3 direction = Vector3.zero;
+        Vector3 moveDirection = Vector3.zero;
         if (moveAction.IsInProgress())
         {
-            direction += (cam.transform.forward-new Vector3(0,cam.transform.forward.y,0)) * moveAction.ReadValue<Vector2>().y;
-            direction += (cam.transform.right-new Vector3(0,cam.transform.right.y,0)) * moveAction.ReadValue<Vector2>().x;
-            direction.Normalize();
+            moveDirection += (cam.transform.forward-new Vector3(0,cam.transform.forward.y,0)) * moveAction.ReadValue<Vector2>().y;
+            moveDirection += (cam.transform.right-new Vector3(0,cam.transform.right.y,0)) * moveAction.ReadValue<Vector2>().x;
+            moveDirection.Normalize();
         }
 
         if (movementController.isGrounded)
         {
-            velocity = Vector3.zero;
+            currFallingSpeed = Vector3.zero;
         }
         else
         {
-            velocity += -transform.up * (9.81f * 10) * Time.deltaTime; // Gravity
+            currFallingSpeed += -transform.up * (9.81f * 10) * Time.deltaTime; // Gravity
         }
 
-        if (sprintAction.IsPressed())
+        if (sprintAction.IsInProgress())
         {  // Player can sprint by holding "Left Shit" keyboard button
             currMoveSpeed = SprintSpeed;
         }
@@ -70,8 +78,13 @@ public class PlayerController : MonoBehaviour
         {
             currMoveSpeed = MoveSpeed;
         }
-
-        direction += velocity * Time.deltaTime;
-        movementController.Move(direction * Time.deltaTime * currMoveSpeed);
+        
+        moveVelocity = Vector3.SmoothDamp(moveVelocity, moveDirection*currMoveSpeed, ref moveDampVelocity, moveSmoothTime );
+        
+        moveVelocity += currFallingSpeed;
+        
+        
+        
+        movementController.Move(moveVelocity* Time.deltaTime);
     }
 }
