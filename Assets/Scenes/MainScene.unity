@@ -247,6 +247,7 @@ MonoBehaviour:
   MoveSpeed: 10
   SprintSpeed: 20
   moveSmoothTime: 0.1
+  roatationSpeed: 1
 --- !u!143 &510105741
 CharacterController:
   m_ObjectHideFlags: 0
@@ -318,7 +319,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 54932d73a2e1b7940b5258102d58a03b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -578,6 +579,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1777110694}
   - component: {fileID: 1777110693}
+  - component: {fileID: 1777110695}
   m_Layer: 0
   m_Name: Camera Target
   m_TagString: Untagged
@@ -614,6 +616,20 @@ Transform:
   - {fileID: 268627552}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1777110695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1777110692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3c660f336148764eb35f378b544ac02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetTransform: {fileID: 510105745}
+  smoothingSpeed: 2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
