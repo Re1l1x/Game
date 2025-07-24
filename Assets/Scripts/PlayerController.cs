@@ -29,28 +29,29 @@ public class PlayerController : MonoBehaviour
     private InputAction moveAction;
     private InputAction sprintAction;
 
-    private void OnEnable() {
-        moveAction.Enable();
-        sprintAction.Enable();
-    }
-
-    private void OnDisable() {
-        moveAction.Disable();
-        sprintAction.Disable();
-    }
-
     private void Awake()
     {
         inputSystem = new InputSystem();
         moveAction = new InputAction();
         sprintAction = new InputAction();
+        
         moveAction = inputSystem.FindAction("Move");
         sprintAction = inputSystem.FindAction("Sprint");
+    }
+    
+    private void OnEnable() { 
+        moveAction.Enable();
+        sprintAction.Enable();
+    }
+
+    private void OnDisable() { //а что если action используется в двух местах и где то он отключается а где то нет?
+        moveAction.Disable();
+        sprintAction.Disable();
     }
 
     protected virtual void Start()
     {
-        movementController = GetComponent<CharacterController>(); //  Character Controller
+        movementController = GetComponent<CharacterController>();
         cam = Camera.main;
         moveDirection = Vector3.zero;
     }
@@ -81,7 +82,7 @@ public class PlayerController : MonoBehaviour
         moveDirection.Normalize();
             
         if (sprintAction.IsInProgress())
-        {  // Player can sprint by holding "Left Shit" keyboard button
+        {
             currMoveSpeed = SprintSpeed;
         }
         else
@@ -96,7 +97,7 @@ public class PlayerController : MonoBehaviour
         transform.rotation=Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(moveDirection), roatationSpeed);
     }
 
-    public void Fall()
+    public void Fall() //почему то слишком быстро падает
     {
         if (movementController.isGrounded)
         {

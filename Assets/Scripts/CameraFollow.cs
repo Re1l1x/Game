@@ -14,8 +14,11 @@ public class CameraFollow : MonoBehaviour
 
     private void Move()
     {
-        Vector3 nexPosition = Vector3.Lerp(transform.position, targetTransform.position, Time.deltaTime*smoothingSpeed*(1+(transform.position-targetTransform.position).magnitude));
+        Vector3 nextPosition = Vector3.Lerp(
+            transform.position,
+            targetTransform.position,
+            Time.deltaTime*smoothingSpeed*(1+(transform.position-targetTransform.position).magnitude));
         
-        transform.position = nexPosition;
+        transform.position = nextPosition;
     }
 }
